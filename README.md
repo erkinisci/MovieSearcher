@@ -4,7 +4,7 @@
 The Movie Search API is a C# web application that seamlessly connects to the Vimeo online movie database. Leveraging the vast collection of data from Vimeo, this API enables users to search for their favorite movies using specified search terms.
 
 <p align="center">
-  <img src="https://mijnsterkestestorage.blob.core.windows.net/images/boekchoice.png" alt="App Screenshot">
+  <img src="img/moviesearch_architecture.png" alt="API Architecture">
 </p>
 
 ## Features

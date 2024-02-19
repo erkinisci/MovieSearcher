@@ -59,7 +59,7 @@ public class MovieDetailAggregatorService : IMovieDetailAggregatorService
             // NOTE: Creating an asynchronous call for a list of requests is not done due to YouTube limitations for unpaid requests.
             // To avoid unnecessary API calls, iterate through each call individually and wait for the response.
 
-            #region task list
+            #region create task list if you have paid customer
 
             // var tasks = items.Select(async videoItem =>
             // {

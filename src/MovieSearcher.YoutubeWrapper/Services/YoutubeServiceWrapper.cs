@@ -6,26 +6,17 @@ using Polly;
 
 namespace MovieSearcher.YoutubeWrapper.Services;
 
-public partial class YoutubeServiceWrapper : IVideoUrlServiceWrapper
+public partial class YoutubeServiceWrapper(
+    ILogger<YoutubeServiceWrapper> logger,
+    IProxyYoutubeVideoService proxyYoutubeVideoService,
+    IDelayService delayService) : IVideoUrlServiceWrapper
 {
+
     #region Retry
 
     private const int MaxRetries = 3;
 
     #endregion
-
-    private readonly IDelayService _delayService;
-
-    private readonly ILogger<YoutubeServiceWrapper> _logger;
-    private readonly IProxyYoutubeVideoService _proxyYoutubeVideoService;
-
-    public YoutubeServiceWrapper(ILogger<YoutubeServiceWrapper> logger,
-        IProxyYoutubeVideoService proxyYoutubeVideoService, IDelayService delayService)
-    {
-        _logger = logger;
-        _proxyYoutubeVideoService = proxyYoutubeVideoService;
-        _delayService = delayService;
-    }
 
     /// <summary>
     /// Search from Youtube Data API.
@@ -37,35 +28,35 @@ public partial class YoutubeServiceWrapper : IVideoUrlServiceWrapper
     {
         if (string.IsNullOrWhiteSpace(query))
         {
-            _logger.LogError($"Query can not be null");
+            logger.LogError($"Query can not be null");
             return new ServiceResult<string[]>(Array.Empty<string>(), "Query can not be null!");
         }
 
-        _logger.LogInformation($"Searching from Youtube. SearchTerm:{query}");
+        logger.LogInformation($"Searching from Youtube. SearchTerm:{query}");
 
         var policyResult = await Policy
             .Handle<Exception>(ExceptionChecker)
             .RetryAsync(MaxRetries, (e, n) =>
             {
-                _logger.LogError(e, "Youtube Service 'Search' has an error. Retrying n={n}", n);
+                logger.LogError(e, "Youtube Service 'Search' has an error. Retrying n={n}", n);
 
-                return _delayService.ExponentialDelaySecondsAsync(n);
+                return delayService.ExponentialDelaySecondsAsync(n);
             })
             .ExecuteAndCaptureAsync(async () =>
             {
-                var response = await _proxyYoutubeVideoService.ExecuteAsync(query, cancellationToken);
+                var response = await proxyYoutubeVideoService.ExecuteAsync(query, cancellationToken);
 
                 return new ServiceResult<string[]>(response);
             });
 
         if (policyResult.Outcome != OutcomeType.Failure)
         {
-            _logger.LogInformation($"Searched from Youtube. SearchTerm:{query}");
+            logger.LogInformation($"Searched from Youtube. SearchTerm:{query}");
 
             return policyResult.Result;
         }
 
-        _logger.LogError(policyResult.FinalException, "Youtube Service 'Search' has failed.");
+        logger.LogError(policyResult.FinalException, "Youtube Service 'Search' has failed.");
 
         return ReturnClearServiceResult(policyResult.FinalException);
     }

@@ -5,22 +5,13 @@ using Newtonsoft.Json;
 
 namespace MovieSearcher.WebAPI.MiddleWare;
 
-public class ErrorHandlingMiddleware
+public class ErrorHandlingMiddleware(RequestDelegate next, ILogger<ErrorHandlingMiddleware> logger)
 {
-    private readonly ILogger<ErrorHandlingMiddleware> _logger;
-    private readonly RequestDelegate _next;
-
-    public ErrorHandlingMiddleware(RequestDelegate next, ILogger<ErrorHandlingMiddleware> logger)
-    {
-        _next = next;
-        _logger = logger;
-    }
-
     public async Task Invoke(HttpContext context)
     {
         try
         {
-            await _next(context);
+            await next(context);
         }
         catch (Exception ex)
         {
@@ -36,12 +27,12 @@ public class ErrorHandlingMiddleware
         {
             case UnauthorizedAccessException:
                 code = HttpStatusCode.Forbidden;
-                _logger.LogWarning(ex, "Forbidden activity");
+                logger.LogWarning(ex, "Forbidden activity");
                 break;
 
             case ApplicationException:
                 code = HttpStatusCode.BadRequest;
-                _logger.LogError(ex, "Application error");
+                logger.LogError(ex, "Application error");
                 break;
 
             default:
@@ -50,26 +41,26 @@ public class ErrorHandlingMiddleware
                 {
                     case ArgumentNullException:
                         code = HttpStatusCode.BadRequest;
-                        _logger.LogError(ex, "Argument null error");
+                        logger.LogError(ex, "Argument null error");
                         break;
 
                     case OutOfMemoryException:
                         code = HttpStatusCode.BadRequest;
-                        _logger.LogError(ex, "Out of memory error");
+                        logger.LogError(ex, "Out of memory error");
                         break;
 
                     case IndexOutOfRangeException:
                         code = HttpStatusCode.BadRequest;
-                        _logger.LogError(ex, "Index out of range error");
+                        logger.LogError(ex, "Index out of range error");
                         break;
 
                     case InvalidOperationException:
                         code = HttpStatusCode.BadRequest;
-                        _logger.LogError(ex, "Invalid operation error");
+                        logger.LogError(ex, "Invalid operation error");
                         break;
 
                     default:
-                        _logger.LogError(ex, "Global error");
+                        logger.LogError(ex, "Global error");
                         break;
                 }
 

@@ -7,31 +7,22 @@ using VimeoDotNet.Models;
 
 namespace MovieSearcher.Services.MovieDetailAggregator;
 
-public class MovieDetailAggregatorService : IMovieDetailAggregatorService
+public class MovieDetailAggregatorService(
+    ILogger<MovieDetailAggregatorService> logger,
+    IVimeoService vimeoService,
+    IEnumerable<IVideoUrlServiceWrapper> videoUrlServices) : IMovieDetailAggregatorService
 {
-    private readonly ILogger<MovieDetailAggregatorService> _logger;
-    private readonly IEnumerable<IVideoUrlServiceWrapper> _videoUrlServices;
-    private readonly IVimeoService _vimeoService;
-
-    public MovieDetailAggregatorService(ILogger<MovieDetailAggregatorService> logger, IVimeoService vimeoService,
-        IEnumerable<IVideoUrlServiceWrapper> videoUrlServices)
-    {
-        _logger = logger;
-        _vimeoService = vimeoService;
-        _videoUrlServices = videoUrlServices;
-    }
-
     public async Task<VideoResponse<List<VideoData<Video, List<string>>>, int, int, int>> Search(
         QueryParameters queryParameters, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(queryParameters?.Query))
         {
-            _logger.LogError($"Query can not be null");
+            logger.LogError($"Query can not be null");
             return new VideoResponse<List<VideoData<Video, List<string>>>, int, int, int>
                 { Messages = [new MovieSearcherError("Query can not be null!")] };
         }
 
-        var videoServiceResult = await _vimeoService.Search(queryParameters);
+        var videoServiceResult = await vimeoService.Search(queryParameters);
 
         if (!videoServiceResult.IsSuccess)
             return new VideoResponse<List<VideoData<Video, List<string>>>, int, int, int>
@@ -50,16 +41,18 @@ public class MovieDetailAggregatorService : IMovieDetailAggregatorService
             videoServiceResult.Data.Total,
             videoServiceResult.Data.PerPage, videoServiceResult.Data.Page);
 
-        _logger.LogInformation("Registered Services count for Video Url:{Count}", _videoUrlServices.Count());
+        logger.LogInformation("Registered Services count for Video Url:{Count}", videoUrlServices.Count());
 
-        foreach (var urlServiceWrapper in _videoUrlServices)
+        foreach (var urlServiceWrapper in videoUrlServices)
         {
-            _logger.LogInformation("Search service starting. Search Video Url from the video service. Service name:{Name}", urlServiceWrapper.GetType().Name);
+            logger.LogInformation(
+                "Search service starting. Search Video Url from the video service. Service name:{Name}",
+                urlServiceWrapper.GetType().Name);
+
+            #region Create list of task if you have paid customer
 
             // NOTE: Creating an asynchronous call for a list of requests is not done due to YouTube limitations for unpaid requests.
             // To avoid unnecessary API calls, iterate through each call individually and wait for the response.
-
-            #region create task list if you have paid customer
 
             // var tasks = items.Select(async videoItem =>
             // {
@@ -93,7 +86,9 @@ public class MovieDetailAggregatorService : IMovieDetailAggregatorService
                     videoItem.VideoUrls.AddRange(searchVideos.Data);
             }
 
-            _logger.LogInformation("Search service completed. Search Video Urls from the video service. Service name:{Name}", urlServiceWrapper.GetType().Name);
+            logger.LogInformation(
+                "Search service completed. Search Video Urls from the video service. Service name:{Name}",
+                urlServiceWrapper.GetType().Name);
         }
 
         return videoResponse;

@@ -8,15 +8,8 @@ namespace MovieSearcher.WebAPI.Controllers;
 
 [ApiController]
 [Route("api/movie")]
-public class MovieController : ControllerBase
+public class MovieController(IMovieDetailAggregatorService movieDetailAggregatorService) : ControllerBase
 {
-    private readonly IMovieDetailAggregatorService _movieDetailAggregatorService;
-
-    public MovieController(IMovieDetailAggregatorService movieDetailAggregatorService)
-    {
-        _movieDetailAggregatorService = movieDetailAggregatorService;
-    }
-
     /// <summary>
     /// Searches for videos based on the provided query parameters from Vimeo,
     /// retrieves relevant URLs from YouTube, and aggregates the results for the user.
@@ -76,6 +69,6 @@ public class MovieController : ControllerBase
     public async Task<IActionResult> Search([ModelBinder] QueryParameters queryParameters,
         CancellationToken cancellationToken)
     {
-        return Ok(await _movieDetailAggregatorService.Search(queryParameters, cancellationToken));
+        return Ok(await movieDetailAggregatorService.Search(queryParameters, cancellationToken));
     }
 }

@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  moviesearcher-api:
+    container_name: 'moviesearcher-api'
+    restart: always
+    build:
+      context: .
+      target: development
+    ports:
+        8080:80
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - REDIS_HOST=bookchoice-redis
+      - REDIS_PORT=6380
+    depends_on:
+      - moviesearcher-redis
+    networks:
+      - moviesearcher_backend_services
+
+  moviesearcher-redis:
+    container_name: 'moviesearcher-redis'
+    restart: always
+    image: "redis:latest"
+    ports:
+      - "6380:6379"
+      - "0.0.0.0:6379:6379"  # Add this line to bind to all available interfaces
+    volumes:
+      - redis_data:/data
+    networks:
+      - moviesearcher_backend_services
+
+networks:
+  moviesearcher_backend_services:
+    driver: bridge
+    
+volumes:
+  redis_data:

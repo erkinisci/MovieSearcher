@@ -17,50 +17,44 @@ using VimeoDotNet;
 using VimeoDotNet.Authorization;
 #endif
 
-namespace MovieSearcher.WebAPI;
+var builder = WebApplication.CreateBuilder(args);
 
-public class Program
+var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+Console.WriteLine($"ASPNETCORE_ENVIRONMENT: {environment}");
+
+// Azure app configuration
+var azureAppConfig = builder.Configuration.GetConnectionString("AzureAppConfig");
+if (!string.IsNullOrEmpty(azureAppConfig))
 {
-    public static void Main(string[] args)
+    var labelFilter = builder.Configuration.GetValue<string>("AzureAppConfigLabel");
+    builder.Configuration.AddAzureAppConfiguration(options =>
     {
-        var builder = WebApplication.CreateBuilder(args);
+        options.Connect(azureAppConfig).Select(KeyFilter.Any, labelFilter);
+    });
+}
 
-        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-        Console.WriteLine($"ASPNETCORE_ENVIRONMENT: {environment}");
+// logging
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 
-        // Azure app configuration
-        var azureAppConfig = builder.Configuration.GetConnectionString("AzureAppConfig");
-        if (!string.IsNullOrEmpty(azureAppConfig))
-        {
-            var labelFilter = builder.Configuration.GetValue<string>("AzureAppConfigLabel");
-            builder.Configuration.AddAzureAppConfiguration(options =>
-            {
-                options.Connect(azureAppConfig).Select(KeyFilter.Any, labelFilter);
-            });
-        }
-
-        // logging
-        builder.Logging.ClearProviders();
-        builder.Logging.AddConsole();
-
-        builder.Services.AddControllers();
+builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 // Options for API
-        builder.Services.Configure<YoutubeOptions>(builder.Configuration.GetSection(YoutubeOptions.Youtube));
-        builder.Services.Configure<VimeoOptions>(builder.Configuration.GetSection(VimeoOptions.Vimeo));
+builder.Services.Configure<YoutubeOptions>(builder.Configuration.GetSection(YoutubeOptions.Youtube));
+builder.Services.Configure<VimeoOptions>(builder.Configuration.GetSection(VimeoOptions.Vimeo));
 
 #if DEBUG
 
 // Public Token usage
-        builder.Services.AddSingleton<IVimeoClient>(provider =>
-        {
-            var vimeoOptions = provider.GetRequiredService<IOptions<VimeoOptions>>().Value;
-            return new VimeoClient(vimeoOptions.AccessToken);
-        });
+builder.Services.AddSingleton<IVimeoClient>(provider =>
+{
+    var vimeoOptions = provider.GetRequiredService<IOptions<VimeoOptions>>().Value;
+    return new VimeoClient(vimeoOptions.AccessToken);
+});
 
 #else
 // The nuget package I'm using lacks the capability to establish a connection to Vimeo with ClientId & ClientSecret directly.
@@ -97,62 +91,60 @@ builder.Services.AddSingleton<IVimeoClient>(provider =>
 #endif
 
 // Vimeo nuget package registration into DI
-        builder.Services.AddScoped<IVimeoService, VimeoService>();
+builder.Services.AddScoped<IVimeoService, VimeoService>();
 
 // Generic Video URL Service registration.
 // The implementation of this interface, which is registered into DI, will be iterated in the registration order to fetch video URLs from the given provider.
 
 // Currently, the implementation for YouTube is provided (YoutubeServiceWrapper).
 // To add support for additional providers, derive your object from this interface and register it as follows:
-        builder.Services.AddScoped<IVideoUrlServiceWrapper, YoutubeServiceWrapper>();
+builder.Services.AddScoped<IVideoUrlServiceWrapper, YoutubeServiceWrapper>();
 // Add more registrations for other providers if needed, for example:
 // builder.Services.AddSingleton<IVideoUrlServiceWrapper, DailymotionServiceWrapper>();
 // builder.Services.AddSingleton<IVideoUrlServiceWrapper, AnotherProviderServiceWrapper>();
 
 // proxy for youtube instance. since, creating and each object per request would very expensive and not handy to test (due to Google Object), it is in proxy object that can be mocked 
-        builder.Services.AddScoped<IProxyYoutubeVideoService, ProxyYoutubeVideoService>();
-        builder.Services.AddSingleton<IDelayService, DelayService>();
+builder.Services.AddScoped<IProxyYoutubeVideoService, ProxyYoutubeVideoService>();
+builder.Services.AddSingleton<IDelayService, DelayService>();
 
 // Movie aggregator service registration with the implementation of the cache decorator pattern.
-        builder.Services.AddScoped<MovieDetailAggregatorService>();
+builder.Services.AddScoped<MovieDetailAggregatorService>();
 
 // The CachedMovieDetailAggregatorService decorates the original MovieDetailAggregator with caching functionality using IDistributedCache.
-        builder.Services.AddScoped<IMovieDetailAggregatorService>(provider =>
-            new CachedMovieDetailAggregatorService(
-                provider.GetRequiredService<ILogger<CachedMovieDetailAggregatorService>>(),
-                provider.GetRequiredService<MovieDetailAggregatorService>(),
-                provider.GetRequiredService<IDistributedCache>()
-            ));
+builder.Services.AddScoped<IMovieDetailAggregatorService>(provider =>
+    new CachedMovieDetailAggregatorService(
+        provider.GetRequiredService<ILogger<CachedMovieDetailAggregatorService>>(),
+        provider.GetRequiredService<MovieDetailAggregatorService>(),
+        provider.GetRequiredService<IDistributedCache>()
+    ));
 
 // QueryParametersModelBinderProvider is added as the first model binder provider, ensuring that it takes precedence when binding query parameters in incoming requests
-        builder.Services.AddMvc(options =>
-        {
-            options.ModelBinderProviders.Insert(0, new QueryParametersModelBinderProvider());
-        });
+builder.Services.AddMvc(options =>
+{
+    options.ModelBinderProviders.Insert(0, new QueryParametersModelBinderProvider());
+});
 
 // Distributed caching with redis
-        var redisConnectionString = builder.Configuration.GetConnectionString("RedisConnectionString");
-        builder.Services.AddStackExchangeRedisCache(options =>
-        {
-            options.Configuration = redisConnectionString;
-            options.InstanceName = "MovieSearch:";
-        });
+var redisConnectionString = builder.Configuration.GetConnectionString("RedisConnectionString");
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = redisConnectionString;
+    options.InstanceName = "MovieSearch:";
+});
 
-        var app = builder.Build();
+var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 // middleware for api
-        app.UseMiddleware(typeof(ErrorHandlingMiddleware));
+app.UseMiddleware(typeof(ErrorHandlingMiddleware));
 
-        app.UseHttpsRedirection();
-        app.UseAuthorization();
-        app.MapControllers();
-        app.Run();
-    }
-}
+app.UseHttpsRedirection();
+app.UseAuthorization();
+app.MapControllers();
+app.Run();

@@ -42,7 +42,7 @@ public class YoutubeServiceWrapperTests
         result.Errors.Length.Should().Be(1);
         result.Errors.First().Message.Should().Be("Query can not be null!");
 
-        _delayServiceMock.Verify(x => x.ExponentialDelaySecondsAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+        _delayServiceMock.Verify(x => x.DelayWithExponentialBackoff(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         _proxyYoutubeVideoServiceMock.Verify(x => x.ExecuteAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()),
             Times.Never);
     }
@@ -68,7 +68,7 @@ public class YoutubeServiceWrapperTests
 
         result.Errors.Length.Should().Be(0);
 
-        _delayServiceMock.Verify(x => x.ExponentialDelaySecondsAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+        _delayServiceMock.Verify(x => x.DelayWithExponentialBackoff(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         _proxyYoutubeVideoServiceMock.Verify(x => x.ExecuteAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()),
             Times.Once);
     }
@@ -91,7 +91,7 @@ public class YoutubeServiceWrapperTests
         result.Errors.Length.Should().Be(1);
         result.Errors.First().Message.Should().Be("Youtube Service has an error. Request exceeded!");
 
-        _delayServiceMock.Verify(x => x.ExponentialDelaySecondsAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+        _delayServiceMock.Verify(x => x.DelayWithExponentialBackoff(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         _proxyYoutubeVideoServiceMock.Verify(x => x.ExecuteAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()),
             Times.Once);
     }
@@ -114,7 +114,7 @@ public class YoutubeServiceWrapperTests
         result.Errors.Length.Should().Be(1);
         result.Errors.First().Message.Should().Be("Youtube Service has an error. Client Unauthorized!");
 
-        _delayServiceMock.Verify(x => x.ExponentialDelaySecondsAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+        _delayServiceMock.Verify(x => x.DelayWithExponentialBackoff(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         _proxyYoutubeVideoServiceMock.Verify(x => x.ExecuteAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()),
             Times.Once);
     }
@@ -137,7 +137,7 @@ public class YoutubeServiceWrapperTests
         result.Errors.Length.Should().Be(1);
         result.Errors.First().Message.Should().Be("Youtube Service has an unexpected error!");
 
-        _delayServiceMock.Verify(x => x.ExponentialDelaySecondsAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+        _delayServiceMock.Verify(x => x.DelayWithExponentialBackoff(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         _proxyYoutubeVideoServiceMock.Verify(x => x.ExecuteAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()),
             Times.Once);
     }
@@ -160,7 +160,7 @@ public class YoutubeServiceWrapperTests
         result.Errors.Length.Should().Be(1);
         result.Errors.First().Message.Should().Be("Youtube Service has an unexpected error!");
 
-        _delayServiceMock.Verify(x => x.ExponentialDelaySecondsAsync(It.IsAny<int>(), It.IsAny<int>()),
+        _delayServiceMock.Verify(x => x.DelayWithExponentialBackoff(It.IsAny<int>(), It.IsAny<int>()),
             Times.Exactly(3));
 
         // first access fails (1 time)

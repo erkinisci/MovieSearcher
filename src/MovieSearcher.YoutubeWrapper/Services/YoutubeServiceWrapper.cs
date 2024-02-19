@@ -40,7 +40,7 @@ public partial class YoutubeServiceWrapper(
             {
                 logger.LogError(e, "Youtube Service 'Search' has an error. Retrying n={n}", n);
 
-                return delayService.ExponentialDelaySecondsAsync(n);
+                return delayService.DelayWithExponentialBackoff(n);
             })
             .ExecuteAndCaptureAsync(async () =>
             {

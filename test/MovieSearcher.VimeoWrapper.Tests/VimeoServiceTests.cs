@@ -52,7 +52,7 @@ public class VimeoServiceTests
         _vimeoClientMock.Verify(
             x => x.GetVideosAsync(null, It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<string[]>()),
             Times.Never);
-        _delayServiceMock.Verify(x => x.ExponentialDelaySecondsAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+        _delayServiceMock.Verify(x => x.DelayWithExponentialBackoff(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
     }
 
     [Fact]
@@ -69,7 +69,7 @@ public class VimeoServiceTests
         _vimeoClientMock.Verify(
             x => x.GetVideosAsync(null, It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<string[]>()),
             Times.Never);
-        _delayServiceMock.Verify(x => x.ExponentialDelaySecondsAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+        _delayServiceMock.Verify(x => x.DelayWithExponentialBackoff(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
     }
 
     [Fact]
@@ -99,7 +99,7 @@ public class VimeoServiceTests
                 It.IsAny<string[]>()),
             Times.Once);
 
-        _delayServiceMock.Verify(x => x.ExponentialDelaySecondsAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+        _delayServiceMock.Verify(x => x.DelayWithExponentialBackoff(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
     }
 
     [Fact]
@@ -120,7 +120,7 @@ public class VimeoServiceTests
         result.Errors.Length.Should().Be(1);
         result.Errors.First().Message.Should().Be("An error occurred while trying to access the 'Vimeo Service'.");
 
-        _delayServiceMock.Verify(x => x.ExponentialDelaySecondsAsync(It.IsAny<int>(), It.IsAny<int>()),
+        _delayServiceMock.Verify(x => x.DelayWithExponentialBackoff(It.IsAny<int>(), It.IsAny<int>()),
             Times.Exactly(3));
         _vimeoClientMock.Verify(
             x => x.GetVideosAsync(null, It.IsAny<int?>(), It.IsAny<int?>(), queryParameters.Query,
@@ -146,7 +146,7 @@ public class VimeoServiceTests
         result.Errors.Length.Should().Be(1);
         result.Errors.First().Message.Should().Be("An error occurred while trying to access the 'Vimeo Service'.");
 
-        _delayServiceMock.Verify(x => x.ExponentialDelaySecondsAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+        _delayServiceMock.Verify(x => x.DelayWithExponentialBackoff(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         _vimeoClientMock.Verify(
             x => x.GetVideosAsync(null, It.IsAny<int?>(), It.IsAny<int?>(), queryParameters.Query,
                 It.IsAny<string[]>()),
@@ -174,7 +174,7 @@ public class VimeoServiceTests
             x => x.GetVideosAsync(null, It.IsAny<int?>(), It.IsAny<int?>(), queryParameters.Query, expectedFields),
             Times.Once);
 
-        _delayServiceMock.Verify(x => x.ExponentialDelaySecondsAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+        _delayServiceMock.Verify(x => x.DelayWithExponentialBackoff(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
     }
 
     [Fact]
@@ -201,7 +201,7 @@ public class VimeoServiceTests
             x => x.GetVideosAsync(null, queryParameter.Page, queryParameter.PerPage, queryParameter.Query,
                 expectedFields), Times.Once);
 
-        _delayServiceMock.Verify(x => x.ExponentialDelaySecondsAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+        _delayServiceMock.Verify(x => x.DelayWithExponentialBackoff(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
     }
 
 

@@ -53,7 +53,7 @@ public partial class VimeoService : IVimeoService
             {
                 _logger.LogError(e, "Vimeo Service 'Search' has an error. Retrying n={n}", n);
 
-                return _delayService.ExponentialDelaySecondsAsync(n);
+                return _delayService.DelayWithExponentialBackoff(n);
             })
             .ExecuteAndCaptureAsync(async () =>
             {

@@ -38,7 +38,7 @@ public class AggregatorVideoServiceCall(ILogger<AggregatorVideoServiceCall> logg
 
         logger.LogInformation("Created a collection from the Vimeo service result");
 
-        return base.Handle(new VideoResponse<List<VideoData<Video, List<string>>>, int, int, int>(items,
+        return await base.Handle(new VideoResponse<List<VideoData<Video, List<string>>>, int, int, int>(items,
             serviceResult.Data.Total,
             serviceResult.Data.PerPage, serviceResult.Data.Page), cancellationToken);
     }

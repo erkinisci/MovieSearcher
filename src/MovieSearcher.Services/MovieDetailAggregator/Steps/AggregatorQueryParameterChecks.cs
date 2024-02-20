@@ -7,7 +7,7 @@ namespace MovieSearcher.Services.MovieDetailAggregator.Steps;
 
 public class AggregatorQueryParameterChecks(ILogger<AggregatorQueryParameterChecks> logger) : BaseHandler
 {
-    public override Task<object?> Handle(object request, CancellationToken cancellationToken)
+    public override async Task<object?> Handle(object request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Request object is checking {request}", request);
 
@@ -16,6 +16,6 @@ public class AggregatorQueryParameterChecks(ILogger<AggregatorQueryParameterChec
 
         logger.LogInformation("Request object is checked {request}", request);
         
-        return base.Handle(request, cancellationToken);
+        return await base.Handle(request, cancellationToken);
     }
 }

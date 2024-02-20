@@ -22,7 +22,7 @@ public class MovieDetailAggregator(
         get
         {
             queryParameterChecks.SetNext(videoServiceCall).SetNext(videoYoutubeCall);
-
+    
             return queryParameterChecks;
         }
     }
@@ -32,12 +32,9 @@ public class MovieDetailAggregator(
     {
         try
         {
-            queryParameterChecks.SetNext(videoServiceCall).SetNext(videoYoutubeCall);
+            var result = await SearchHandler.Handle(queryParameters, cancellationToken);
             
-            var result = await queryParameterChecks.Handle(queryParameters, cancellationToken);
-
-            return (VideoResponse<List<VideoData<Video, List<string>>>, int, int, int>)result;
-            //return (VideoResponse<List<VideoData<Video, List<string>>>, int, int, int>)(result ?? throw new InvalidOperationException());
+            return (VideoResponse<List<VideoData<Video, List<string>>>, int, int, int>)(result ?? throw new InvalidOperationException());
         }
         catch (MovieAggregatorException movieAggregatorException)
         {

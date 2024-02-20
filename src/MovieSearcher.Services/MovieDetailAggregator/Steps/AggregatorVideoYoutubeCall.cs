@@ -23,7 +23,7 @@ public class AggregatorVideoYoutubeCall(
 
         foreach (var urlServiceWrapper in videoUrlServices)
         {
-            //logger.LogInformation("Search service starting from the '{Name}' service.", urlServiceWrapper.GetType().Name);
+            logger.LogInformation("Search service starting from the '{Name}' service.", urlServiceWrapper.GetType().Name);
             
             foreach (var videoItem in videoResponse.Data)
             {
@@ -42,6 +42,6 @@ public class AggregatorVideoYoutubeCall(
             logger.LogInformation("Search service end for the '{Name}' service.", urlServiceWrapper.GetType().Name);
         }
 
-        return base.Handle(videoResponse, cancellationToken);
+        return await base.Handle(videoResponse, cancellationToken);
     }
 }

@@ -74,7 +74,7 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware(typeof(ErrorHandlingMiddleware));
 
 // Activate OutputCache
-app.UseOutputCache();
+//app.UseOutputCache();
 
 app.UseHttpsRedirection();
 app.UseAuthorization();

@@ -51,7 +51,7 @@ public partial class YoutubeServiceWrapper(
 
         if (policyResult.Outcome != OutcomeType.Failure)
         {
-            logger.LogInformation($"Searched from Youtube. SearchTerm:{query}");
+            logger.LogInformation("Searched from Youtube. SearchTerm: {query}",query);
 
             return policyResult.Result;
         }

@@ -2,7 +2,7 @@ using MovieSearcher.Core.Models;
 using MovieSearcher.Core.Query;
 using VimeoDotNet.Models;
 
-namespace MovieSearcher.Services.MovieDetailAggregator;
+namespace MovieSearcher.Services;
 
 public interface IMovieDetailAggregatorService
 {

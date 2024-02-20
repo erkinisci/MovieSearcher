@@ -1,6 +1,4 @@
-using MovieSearcher.YoutubeWrapper.Options;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
-using MovieSearcher.VimeoWrapper.Options;
 using MovieSearcher.WebAPI.Binder;
 using MovieSearcher.WebAPI.Extensions;
 using MovieSearcher.WebAPI.MiddleWare;
@@ -59,7 +57,7 @@ builder.Services.AddStackExchangeRedisCache(options =>
 // OutputCache with redis for endpoints
 builder.Services.AddStackExchangeRedisOutputCache(options =>
 {
-    options.Configuration = builder.Configuration.GetConnectionString("RedisConnectionString");
+    options.Configuration = redisConnectionString;
     options.InstanceName = "MovieSearch:OutputCache:";
 });
 

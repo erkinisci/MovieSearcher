@@ -3,13 +3,14 @@ using MovieSearcher.Core.Query;
 using MovieSearcher.Services.MovieDetailAggregator;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
+using MovieSearcher.Services;
 using VimeoDotNet.Models;
 
 namespace MovieSearcher.WebAPI.Controllers;
 
 [ApiController]
 [Route("api/movie")]
-public class MovieController(IMovieDetailAggregatorService movieDetailAggregatorService) : ControllerBase
+public class MovieController(IMovieDetailAggregatorService movieDetailAggregatorService, [FromKeyedServices("MovieDetailAggregatorCOR")] IMovieDetailAggregatorService detailAggregatorService) : ControllerBase
 {
     /// <summary>
     /// Searches for videos based on the provided query parameters from Vimeo,
@@ -72,5 +73,16 @@ public class MovieController(IMovieDetailAggregatorService movieDetailAggregator
         CancellationToken cancellationToken)
     {
         return Ok(await movieDetailAggregatorService.Search(queryParameters, cancellationToken));
+    }
+    
+    [HttpGet("search2")]
+    [ProducesResponseType(StatusCodes.Status200OK,
+        Type = typeof(VideoResponse<List<VideoData<Video, List<string>>>, int, int, int>))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [OutputCache]
+    public async Task<IActionResult> Search2([ModelBinder] QueryParameters queryParameters,
+        CancellationToken cancellationToken)
+    {
+        return Ok(await detailAggregatorService.Search(queryParameters, cancellationToken));
     }
 }

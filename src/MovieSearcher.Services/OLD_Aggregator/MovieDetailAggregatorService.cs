@@ -1,11 +1,12 @@
-﻿using MovieSearcher.Core;
+﻿using Microsoft.Extensions.Logging;
+using MovieSearcher.Core;
 using MovieSearcher.Core.Models;
 using MovieSearcher.Core.Query;
+using MovieSearcher.Services.MovieDetailAggregator;
 using MovieSearcher.VimeoWrapper.Services;
-using Microsoft.Extensions.Logging;
 using VimeoDotNet.Models;
 
-namespace MovieSearcher.Services.MovieDetailAggregator;
+namespace MovieSearcher.Services.OLD_Aggregator;
 
 public class MovieDetailAggregatorService(
     ILogger<MovieDetailAggregatorService> logger,

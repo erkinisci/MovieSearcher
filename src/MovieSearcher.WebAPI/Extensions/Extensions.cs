@@ -1,8 +1,12 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
 using MovieSearcher.Core;
+using MovieSearcher.Core.Patterns.CoR;
 using MovieSearcher.Core.Utility;
+using MovieSearcher.Services;
 using MovieSearcher.Services.MovieDetailAggregator;
+using MovieSearcher.Services.MovieDetailAggregator.Steps;
+using MovieSearcher.Services.OLD_Aggregator;
 using MovieSearcher.VimeoWrapper.Options;
 using MovieSearcher.VimeoWrapper.Services;
 using MovieSearcher.YoutubeWrapper.Options;
@@ -27,7 +31,6 @@ internal static class Extensions
 
     public static void AddApplicationServices(this WebApplicationBuilder builder)
     {
-        
 #if DEBUG
 // Usage - Public Token
         builder.Services.AddSingleton<IVimeoClient>(provider =>
@@ -89,7 +92,7 @@ builder.Services.AddSingleton<IVimeoClient>(provider =>
 
 // Movie aggregator service registration with the implementation of the cache decorator pattern.
         builder.Services.AddScoped<MovieDetailAggregatorService>();
-
+        
 // The CachedMovieDetailAggregatorService decorates the original MovieDetailAggregator with caching functionality using IDistributedCache.
         builder.Services.AddScoped<IMovieDetailAggregatorService>(provider =>
             new CachedMovieDetailAggregatorService(
@@ -97,5 +100,10 @@ builder.Services.AddSingleton<IVimeoClient>(provider =>
                 provider.GetRequiredService<MovieDetailAggregatorService>(),
                 provider.GetRequiredService<IDistributedCache>()
             ));
+        
+        builder.Services.AddKeyedTransient<IMovieDetailAggregatorService, MovieDetailAggregator>("MovieDetailAggregatorCOR");
+        builder.Services.AddKeyedScoped<IHandler, AggregatorQueryParameterChecks>("AggregatorQueryParameterChecks");
+        builder.Services.AddKeyedScoped<IHandler, AggregatorVideoServiceCall>("AggregatorVideoServiceCall");
+        builder.Services.AddKeyedScoped<IHandler, AggregatorVideoYoutubeCall>("AggregatorVideoYoutubeCall");
     }
 }

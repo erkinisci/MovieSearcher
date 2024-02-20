@@ -1,13 +1,13 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Logging;
 using MovieSearcher.Core.Extensions;
 using MovieSearcher.Core.Models;
 using MovieSearcher.Core.Query;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Logging;
 using VimeoDotNet.Models;
 
-namespace MovieSearcher.Services.MovieDetailAggregator;
+namespace MovieSearcher.Services.OLD_Aggregator;
 
 public class CachedMovieDetailAggregatorService : IMovieDetailAggregatorService
 {

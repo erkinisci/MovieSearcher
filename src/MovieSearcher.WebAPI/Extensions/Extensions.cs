@@ -105,5 +105,7 @@ builder.Services.AddSingleton<IVimeoClient>(provider =>
         builder.Services.AddKeyedScoped<IHandler, AggregatorQueryParameterChecks>("AggregatorQueryParameterChecks");
         builder.Services.AddKeyedScoped<IHandler, AggregatorVideoServiceCall>("AggregatorVideoServiceCall");
         builder.Services.AddKeyedScoped<IHandler, AggregatorVideoYoutubeCall>("AggregatorVideoYoutubeCall");
+
+        builder.Services.AddKeyedScoped<IHandler, SearchViaCache>("SearchViaCache");
     }
 }

@@ -2,7 +2,6 @@
 using MovieSearcher.Core;
 using MovieSearcher.Core.Models;
 using MovieSearcher.Core.Query;
-using MovieSearcher.Services.MovieDetailAggregator;
 using MovieSearcher.VimeoWrapper.Services;
 using VimeoDotNet.Models;
 

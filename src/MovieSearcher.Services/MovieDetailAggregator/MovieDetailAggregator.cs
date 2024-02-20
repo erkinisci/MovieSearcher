@@ -17,15 +17,21 @@ public class MovieDetailAggregator(
     [FromKeyedServices("AggregatorVideoYoutubeCall")]
     IHandler videoYoutubeCall) : IMovieDetailAggregatorService
 {
+    #region Chains
+    
     private IHandler SearchHandler
     {
         get
         {
-            queryParameterChecks.SetNext(videoServiceCall).SetNext(videoYoutubeCall);
+            queryParameterChecks
+                .SetNext(videoServiceCall)
+                .SetNext(videoYoutubeCall);
     
             return queryParameterChecks;
         }
     }
+    
+    #endregion
 
     public async Task<VideoResponse<List<VideoData<Video, List<string>>>, int, int, int>> Search(
         QueryParameters queryParameters, CancellationToken cancellationToken)

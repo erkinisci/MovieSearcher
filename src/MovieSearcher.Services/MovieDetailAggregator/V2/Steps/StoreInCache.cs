@@ -34,7 +34,7 @@ public class StoreInCache(ILogger<StoreInCache> logger, IDistributedCache distri
         
         logger.LogInformation("Data storing into cache with key: {key}", key);
         
-        var data = JsonSerializer.Serialize(request, JsonOptions);
+        var data = JsonSerializer.Serialize(parameters[0], JsonOptions);
 
         await distributedCache.SetStringAsync(key, data, CacheOptions, cancellationToken);
 

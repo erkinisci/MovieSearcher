@@ -26,7 +26,7 @@ public class SearchViaCache(ILogger<SearchViaCache> logger, IDistributedCache di
         if (videoResponse == null)
             return await base.Handle(request, cancellationToken);
 
-        return await base.Handle(videoResponse, cancellationToken);
+        return await Task.FromResult((request, new object[] { videoResponse }));
     }
 
     // The following code involves setting up a JsonSerializer and related settings.

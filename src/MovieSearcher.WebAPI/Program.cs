@@ -12,32 +12,11 @@ var builder = WebApplication.CreateBuilder(args);
 var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 Console.WriteLine($"ASPNETCORE_ENVIRONMENT: {environment}");
 
-// Add API versioning
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
-builder.Services.AddSwaggerGen(
-    options =>
-    {
-        // add a custom operation filter which sets default values
-        options.OperationFilter<SwaggerDefaultValues>();
-    });
+// Open Api - swagger setup
+builder.AddOpenApi();
 
-builder.Services.AddApiVersioning(
-    options =>
-    {
-        options.ReportApiVersions = true;
-        options.DefaultApiVersion = new ApiVersion(1);
-        options.AssumeDefaultVersionWhenUnspecified = true;
-    }).AddApiExplorer(options =>
-{
-    // add the versioned api explorer, which also adds IApiVersionDescriptionProvider service
-    // note: the specified format code will format the version as "'v'major[.minor][-status]"
-    options.GroupNameFormat = "'v'VVV";
-
-    // note: this option is only necessary when versioning by url segment. the SubstitutionFormat
-    // can also be used to control the format of the API version in route templates
-    options.SubstituteApiVersionInUrl = true;
-});
+// Api.Versioning setup
+builder.AddApiVersioning();
 
 // Azure app configuration
 var azureAppConfig = builder.Configuration.GetConnectionString("AzureAppConfig");
@@ -57,14 +36,16 @@ builder.Logging.AddConsole();
 builder.Services.AddControllers();
 
 // Application extensions
-builder.AddApplicationServices();
 builder.AddApplicationOptions();
+builder.AddApplicationServices();
+builder.AddApplicationServicesV1();
+builder.AddApplicationServicesV2();
 
-// Default output caching policy default 1 hour
+// Default output caching policy default 15 seconds
 // Learn more about configuring OutputCache https://learn.microsoft.com/en-us/aspnet/core/performance/caching/output?view=aspnetcore-8.0#add-the-middleware-to-the-app
 builder.Services.AddOutputCache(options =>
 {
-    options.AddBasePolicy(policyBuilder => policyBuilder.Expire(TimeSpan.FromHours(1)));
+    options.AddBasePolicy(policyBuilder => policyBuilder.Expire(TimeSpan.FromSeconds(10)));
 });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -117,7 +98,7 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware(typeof(ErrorHandlingMiddleware));
 
 // Activate OutputCache
-//app.UseOutputCache();
+app.UseOutputCache();
 
 app.UseHttpsRedirection();
 app.UseAuthorization();

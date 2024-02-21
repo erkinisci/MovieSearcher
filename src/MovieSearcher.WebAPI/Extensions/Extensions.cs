@@ -21,7 +21,7 @@ using VimeoDotNet.Authorization;
 
 namespace MovieSearcher.WebAPI.Extensions;
 
-internal static class Extensions
+public static class Extensions
 {
     public static void AddApplicationOptions(this WebApplicationBuilder builder)
     {
@@ -90,10 +90,13 @@ builder.Services.AddSingleton<IVimeoClient>(provider =>
 // proxy for youtube instance. since, creating and each object per request would very expensive and not handy to test (due to Google Object), it is in proxy object that can be mocked 
         builder.Services.AddScoped<IProxyYoutubeVideoService, ProxyYoutubeVideoService>();
         builder.Services.AddSingleton<IDelayService, DelayService>();
+    }
 
-// Movie aggregator service registration with the implementation of the cache decorator pattern.
+    public static void AddApplicationServicesV1(this WebApplicationBuilder builder)
+    {
+        // Movie aggregator service registration with the implementation of the cache decorator pattern.
         builder.Services.AddScoped<MovieDetailAggregatorService>();
-        
+
 // The CachedMovieDetailAggregatorService decorates the original MovieDetailAggregator with caching functionality using IDistributedCache.
         builder.Services.AddScoped<IMovieDetailAggregatorService>(provider =>
             new CachedMovieDetailAggregatorService(
@@ -101,10 +104,14 @@ builder.Services.AddSingleton<IVimeoClient>(provider =>
                 provider.GetRequiredService<MovieDetailAggregatorService>(),
                 provider.GetRequiredService<IDistributedCache>()
             ));
+    }
 
-        builder.Services.AddKeyedScoped<IMovieDetailAggregatorService, CachedMovieDetailAggregator>(nameof(CachedMovieDetailAggregator));
-        
-        builder.Services.AddKeyedScoped<IHandler, AggregatorQueryParameterChecks>(nameof(AggregatorQueryParameterChecks));
+    public static void AddApplicationServicesV2(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddKeyedScoped<IMovieDetailAggregatorService, MovieDetailAggregator>(
+            nameof(MovieDetailAggregator));
+        builder.Services.AddKeyedScoped<IHandler, AggregatorQueryParameterChecks>(
+            nameof(AggregatorQueryParameterChecks));
         builder.Services.AddKeyedScoped<IHandler, AggregatorVideoServiceCall>(nameof(AggregatorVideoServiceCall));
         builder.Services.AddKeyedScoped<IHandler, AggregatorVideoYoutubeCall>(nameof(AggregatorVideoYoutubeCall));
 

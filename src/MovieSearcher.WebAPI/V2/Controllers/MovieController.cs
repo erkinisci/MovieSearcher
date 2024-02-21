@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.OutputCaching;
 using MovieSearcher.Core.Models;
 using MovieSearcher.Core.Query;
 using MovieSearcher.Services;
+using MovieSearcher.Services.MovieDetailAggregator.V2;
 using VimeoDotNet.Models;
 
 namespace MovieSearcher.WebAPI.V2.Controllers;
@@ -11,7 +12,7 @@ namespace MovieSearcher.WebAPI.V2.Controllers;
 [ApiController]
 [ApiVersion(2)]
 [Route("api/v{version:apiVersion}/movie")]
-public class MovieController([FromKeyedServices("CachedMovieDetailAggregator")] IMovieDetailAggregatorService detailAggregatorService) : ControllerBase
+public class MovieController([FromKeyedServices(nameof(MovieDetailAggregator))] IMovieDetailAggregatorService detailAggregatorService) : ControllerBase
 {
     /// <summary>
     /// Searches for videos based on the provided query parameters from Vimeo,

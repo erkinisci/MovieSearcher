@@ -37,17 +37,7 @@ public class DelayService : IDelayService
 
         var delaySeconds = 0.5 * (Math.Pow(2.0, failedAttempts) - 1.0);
         var finalDelaySeconds = Math.Min(maxDelayInSeconds, delaySeconds);
-
-        try
-        {
-            Task.Delay(TimeSpan.FromSeconds(finalDelaySeconds)).Wait();
-        }
-        catch (Exception ex)
-        {
-            // Handle or log the exception as needed
-            Console.WriteLine($"An error occurred during the delay: {ex.Message}");
-        }
-
+        
         return Convert.ToInt32(finalDelaySeconds);
     }
 }

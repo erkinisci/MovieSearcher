@@ -17,17 +17,16 @@ The Movie Search API is a C# web application that seamlessly connects to the Vim
 
 ## Getting Started
 
-## API Overview
+### API Overview
 
 The API I have developed incorporates the use of the Asp.Versioning NuGet package for version control and implementation.
 
-### Asp.Net Versioning
-
+##### Asp.Net Versioning :
 I have organized the implementations into two versions: V1 and V2.
 
-**V1:** Version 1 includes a straightforward implementation of a video aggregator.
+**-- V1:** Version 1 includes a straightforward implementation of a video aggregator.
 
-**V2:** Version 2, on the other hand, utilizes the Chain of Responsibility pattern for both data aggregation and caching mechanisms, enhancing the overall functionality.
+**-- V2:** Version 2, on the other hand, utilizes the Chain of Responsibility pattern for both data aggregation and caching mechanisms, enhancing the overall functionality.
 
 Feel free to explore each version based on your specific requirements and preferences.
 

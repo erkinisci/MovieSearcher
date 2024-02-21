@@ -30,4 +30,8 @@
         <ProjectReference Include="..\..\src\MovieSearcher.WebAPI\MovieSearcher.WebAPI.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="MovieController\V2\" />
+    </ItemGroup>
+
 </Project>

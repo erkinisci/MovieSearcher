@@ -5,7 +5,8 @@ namespace MovieSearcher.WebAPI.Tests.Integration;
 
 internal static class HttpHelper
 {
-    public const string Search = "/api/movie/search";
+    public const string SearchV1 = "/api/v1/movie/search";
+    public const string SearchV2 = "/api/v2/movie/search";
 }
 
 public static class QueryParametersExtensions

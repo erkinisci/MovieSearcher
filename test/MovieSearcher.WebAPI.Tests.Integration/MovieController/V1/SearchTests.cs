@@ -1,15 +1,15 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
-using MovieSearcher.WebAPI.Tests.Integration.Fixture;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
 using MovieSearcher.Core.Extensions;
 using MovieSearcher.Core.Models;
 using MovieSearcher.Core.Query;
+using MovieSearcher.WebAPI.Tests.Integration.Fixture;
 using VimeoDotNet.Models;
 
-namespace MovieSearcher.WebAPI.Tests.Integration.MovieController;
+namespace MovieSearcher.WebAPI.Tests.Integration.MovieController.V1;
 
 public class SearchTests : IClassFixture<MovieSearcherApiFactory>
 {
@@ -25,13 +25,13 @@ public class SearchTests : IClassFixture<MovieSearcherApiFactory>
     [Fact]
     public async Task Search_should_return_from_api_and_save_to_redis_cache()
     {
-        var searchParameters = new QueryParameters()
+        var searchParameters = new QueryParameters
         {
             Query = "truman show",
             PerPage = 1
         };
 
-        var response = await _client.GetAsync($"{HttpHelper.Search}{searchParameters.CreateQueryString()}");
+        var response = await _client.GetAsync($"{HttpHelper.SearchV1}{searchParameters.CreateQueryString()}");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -60,7 +60,7 @@ public class SearchTests : IClassFixture<MovieSearcherApiFactory>
             PerPage = 1
         };
 
-        var response = await _client.GetAsync($"{HttpHelper.Search}{searchParameters.CreateQueryString()}");
+        var response = await _client.GetAsync($"{HttpHelper.SearchV1}{searchParameters.CreateQueryString()}");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 

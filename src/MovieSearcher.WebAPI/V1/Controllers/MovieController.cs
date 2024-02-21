@@ -11,7 +11,7 @@ namespace MovieSearcher.WebAPI.V1.Controllers;
 [ApiController]
 [ApiVersion(1)]
 [Route("api/v{version:apiVersion}/movie")]
-public class MovieController(IMovieDetailAggregatorService movieDetailAggregatorService, [FromKeyedServices("MovieDetailAggregatorCOR")] IMovieDetailAggregatorService detailAggregatorService) : ControllerBase
+public class MovieController(IMovieDetailAggregatorService movieDetailAggregatorService) : ControllerBase
 {
     /// <summary>
     /// Searches for videos based on the provided query parameters from Vimeo,
@@ -19,9 +19,9 @@ public class MovieController(IMovieDetailAggregatorService movieDetailAggregator
     /// </summary>
     /// <remarks>
     /// Example Usage:
-    /// GET /api/movie/search?query=truman show&perPage=1&page=1
-    /// GET /api/movie/search?query=truman show
-    /// GET /api/movie/search?query=truman show&page=1
+    /// GET /api/v1/movie/search?query=truman show&perPage=1&page=1
+    /// GET /api/v1/movie/search?query=truman show
+    /// GET /api/v1/movie/search?query=truman show&page=1
     /// </remarks>
     /// <param name="queryParameters">The query parameters for the video search.</param>
     /// <param name="cancellationToken">The cancellation token.</param>

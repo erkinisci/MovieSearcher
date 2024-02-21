@@ -20,9 +20,9 @@ public class MovieController([FromKeyedServices(nameof(MovieDetailAggregator))] 
     /// </summary>
     /// <remarks>
     /// Example Usage:
-    /// GET /api/movie/search?query=truman show&perPage=1&page=1
-    /// GET /api/movie/search?query=truman show
-    /// GET /api/movie/search?query=truman show&page=1
+    /// GET /api/v2/movie/search?query=truman show&perPage=1&page=1
+    /// GET /api/v2/movie/search?query=truman show
+    /// GET /api/v2/movie/search?query=truman show&page=1
     /// </remarks>
     /// <param name="queryParameters">The query parameters for the video search.</param>
     /// <param name="cancellationToken">The cancellation token.</param>

@@ -31,9 +31,9 @@ public class StoreInCache(ILogger<StoreInCache> logger, IDistributedCache distri
         params object[] parameters)
     {
         var key = (request as QueryParameters)!.GenerateKey();
-        
+
         logger.LogInformation("Data storing into cache with key: {key}", key);
-        
+
         var data = JsonSerializer.Serialize(parameters[0], JsonOptions);
 
         await distributedCache.SetStringAsync(key, data, CacheOptions, cancellationToken);

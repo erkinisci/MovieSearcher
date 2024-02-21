@@ -15,7 +15,7 @@ public class AggregatorQueryParameterChecks(ILogger<AggregatorQueryParameterChec
             throw new MovieAggregatorException("Query can not be null");
 
         logger.LogInformation("Request object is checked {request}", request);
-        
+
         return await base.Handle(request, cancellationToken);
     }
 }

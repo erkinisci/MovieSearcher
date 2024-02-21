@@ -12,11 +12,12 @@ public class AggregatorVideoYoutubeCall(
     IEnumerable<IVideoUrlServiceWrapper> videoUrlServices)
     : BaseHandler
 {
-    public override async Task<object?> Handle(CancellationToken cancellationToken, object request, params object[] parameters)
+    public override async Task<object?> Handle(CancellationToken cancellationToken, object request,
+        params object[] parameters)
     {
-        if(parameters == null || parameters.Length == 0)
+        if (parameters == null || parameters.Length == 0)
             throw new MovieAggregatorException("There is no video result!");
-        
+
         if (parameters[0] is not VideoResponse<List<VideoData<Video, List<string>>>, int, int, int> videoResponse)
             throw new MovieAggregatorException("There is no video result!");
 
@@ -24,8 +25,9 @@ public class AggregatorVideoYoutubeCall(
 
         foreach (var urlServiceWrapper in videoUrlServices)
         {
-            logger.LogInformation("Search service starting from the '{Name}' service.", urlServiceWrapper.GetType().Name);
-            
+            logger.LogInformation("Search service starting from the '{Name}' service.",
+                urlServiceWrapper.GetType().Name);
+
             foreach (var videoItem in videoResponse.Data)
             {
                 var searchVideos = await urlServiceWrapper.Search(videoItem.Video.Name, cancellationToken);
@@ -39,7 +41,7 @@ public class AggregatorVideoYoutubeCall(
                 if (searchVideos.Data != null)
                     videoItem.VideoUrls.AddRange(searchVideos.Data);
             }
-            
+
             logger.LogInformation("Search service end for the '{Name}' service.", urlServiceWrapper.GetType().Name);
         }
 

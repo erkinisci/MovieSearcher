@@ -9,7 +9,7 @@ public static class OpenApiExtensions
     public static void AddOpenApi(this WebApplicationBuilder builder)
     {
         builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
-        
+
         builder.Services.AddSwaggerGen(
             options =>
             {

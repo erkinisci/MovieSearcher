@@ -14,7 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\MovieSearcher.Core\MovieSearcher.Core.csproj" />
+        <ProjectReference Include="..\MovieSearcher.Core\MovieSearcher.Core.csproj"/>
     </ItemGroup>
 
 </Project>

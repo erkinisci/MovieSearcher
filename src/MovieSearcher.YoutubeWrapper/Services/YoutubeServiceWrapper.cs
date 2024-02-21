@@ -11,7 +11,6 @@ public partial class YoutubeServiceWrapper(
     IProxyYoutubeVideoService proxyYoutubeVideoService,
     IDelayService delayService) : IVideoUrlServiceWrapper
 {
-
     #region Retry
 
     private const int MaxRetries = 3;
@@ -51,7 +50,7 @@ public partial class YoutubeServiceWrapper(
 
         if (policyResult.Outcome != OutcomeType.Failure)
         {
-            logger.LogInformation("Searched from Youtube. SearchTerm: {query}",query);
+            logger.LogInformation("Searched from Youtube. SearchTerm: {query}", query);
 
             return policyResult.Result;
         }

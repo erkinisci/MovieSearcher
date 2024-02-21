@@ -11,16 +11,14 @@ public class DelayService : IDelayService
     public async Task DelayWithExponentialBackoff(int failedAttempts, int maxDelayInSeconds = 1024)
     {
         if (failedAttempts < 0)
-        {
             throw new ArgumentException("failedAttempts should be non-negative.", nameof(failedAttempts));
-        }
 
         var delaySeconds = 0.5 * (Math.Pow(2.0, failedAttempts) - 1.0);
         var finalDelaySeconds = Math.Min(maxDelayInSeconds, delaySeconds);
 
         await Task.Delay(TimeSpan.FromSeconds(finalDelaySeconds));
     }
-    
+
     /// <summary>
     /// The method is to calculate the exponential backoff delay.
     /// </summary>
@@ -31,13 +29,11 @@ public class DelayService : IDelayService
     public int CalculateExponentialBackoffDelay(int failedAttempts, int maxDelayInSeconds = 1024)
     {
         if (failedAttempts < 0)
-        {
             throw new ArgumentException("failedAttempts should be non-negative.", nameof(failedAttempts));
-        }
 
         var delaySeconds = 0.5 * (Math.Pow(2.0, failedAttempts) - 1.0);
         var finalDelaySeconds = Math.Min(maxDelayInSeconds, delaySeconds);
-        
+
         return Convert.ToInt32(finalDelaySeconds);
     }
 }

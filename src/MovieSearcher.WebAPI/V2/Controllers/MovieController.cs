@@ -12,7 +12,9 @@ namespace MovieSearcher.WebAPI.V2.Controllers;
 [ApiController]
 [ApiVersion(2)]
 [Route("api/v{version:apiVersion}/movie")]
-public class MovieController([FromKeyedServices(nameof(MovieDetailAggregator))] IMovieDetailAggregatorService detailAggregatorService) : ControllerBase
+public class MovieController(
+    [FromKeyedServices(nameof(MovieDetailAggregator))] IMovieDetailAggregatorService detailAggregatorService)
+    : ControllerBase
 {
     /// <summary>
     /// Searches for videos based on the provided query parameters from Vimeo,

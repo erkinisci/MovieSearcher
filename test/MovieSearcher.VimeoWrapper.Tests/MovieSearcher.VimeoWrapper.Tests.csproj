@@ -27,7 +27,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\MovieSearcher.VimeoWrapper\MovieSearcher.VimeoWrapper.csproj" />
+        <ProjectReference Include="..\..\src\MovieSearcher.VimeoWrapper\MovieSearcher.VimeoWrapper.csproj"/>
     </ItemGroup>
 
 </Project>

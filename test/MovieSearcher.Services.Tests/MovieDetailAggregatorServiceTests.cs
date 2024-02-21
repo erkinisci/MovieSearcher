@@ -1,4 +1,3 @@
-
 using MovieSearcher.Core;
 using MovieSearcher.Core.Models;
 using MovieSearcher.Core.Query;

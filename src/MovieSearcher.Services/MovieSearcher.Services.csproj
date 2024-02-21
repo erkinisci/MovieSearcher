@@ -7,8 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\MovieSearcher.Core\MovieSearcher.Core.csproj" />
-        <ProjectReference Include="..\MovieSearcher.VimeoWrapper\MovieSearcher.VimeoWrapper.csproj" />
+        <ProjectReference Include="..\MovieSearcher.Core\MovieSearcher.Core.csproj"/>
+        <ProjectReference Include="..\MovieSearcher.VimeoWrapper\MovieSearcher.VimeoWrapper.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

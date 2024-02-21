@@ -26,7 +26,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\MovieSearcher.Services\MovieSearcher.Services.csproj" />
+        <ProjectReference Include="..\..\src\MovieSearcher.Services\MovieSearcher.Services.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

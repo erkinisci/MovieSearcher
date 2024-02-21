@@ -20,7 +20,7 @@ public class MovieDetailAggregator(
     [FromKeyedServices("StoreInCache")] IHandler storeInCache) : IMovieDetailAggregatorService
 {
     #region Chains
-    
+
     private IHandler SearchHandler
     {
         get
@@ -30,11 +30,11 @@ public class MovieDetailAggregator(
                 .SetNext(aggregatorVideoServiceCall)
                 .SetNext(videoYoutubeCall)
                 .SetNext(storeInCache);
-    
+
             return queryParameterChecks;
         }
     }
-    
+
     #endregion
 
     public async Task<VideoResponse<List<VideoData<Video, List<string>>>, int, int, int>> Search(
@@ -42,10 +42,12 @@ public class MovieDetailAggregator(
     {
         try
         {
-            var result = (ValueTuple<object, object[]>)(await SearchHandler.Handle(queryParameters, cancellationToken) ??
-                                                        throw new InvalidOperationException("Unexpected service result!"));
-            
-            return (VideoResponse<List<VideoData<Video, List<string>>>, int, int, int>)(result.Item2[0] ?? throw new InvalidOperationException("Unexpected service result!"));
+            var result =
+                (ValueTuple<object, object[]>)(await SearchHandler.Handle(queryParameters, cancellationToken) ??
+                                               throw new InvalidOperationException("Unexpected service result!"));
+
+            return (VideoResponse<List<VideoData<Video, List<string>>>, int, int, int>)(result.Item2[0] ??
+                throw new InvalidOperationException("Unexpected service result!"));
         }
         catch (MovieAggregatorException movieAggregatorException)
         {

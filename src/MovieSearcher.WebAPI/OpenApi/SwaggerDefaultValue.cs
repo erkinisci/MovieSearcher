@@ -24,18 +24,11 @@ public class SwaggerDefaultValues : IOperationFilter
             var response = operation.Responses[responseKey];
 
             foreach (var contentType in response.Content.Keys)
-            {
                 if (!responseType.ApiResponseFormats.Any(x => x.MediaType == contentType))
-                {
                     response.Content.Remove(contentType);
-                }
-            }
         }
 
-        if (operation.Parameters == null)
-        {
-            return;
-        }
+        if (operation.Parameters == null) return;
 
         // REF: https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/412
         // REF: https://github.com/domaindrivendev/Swashbuckle.AspNetCore/pull/413

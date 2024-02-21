@@ -10,19 +10,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Asp.Versioning.Http" Version="8.0.0" />
-        <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.OutputCaching.StackExchangeRedis" Version="8.0.2" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-        
+        <PackageReference Include="Asp.Versioning.Http" Version="8.0.0"/>
+        <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.0.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.OutputCaching.StackExchangeRedis" Version="8.0.2"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
+
         <PackageReference Include="Microsoft.Azure.AppConfiguration.AspNetCore" Version="7.0.0"/>
         <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\MovieSearcher.Core\MovieSearcher.Core.csproj" />
-        <ProjectReference Include="..\MovieSearcher.Services\MovieSearcher.Services.csproj" />
-        <ProjectReference Include="..\MovieSearcher.YoutubeWrapper\MovieSearcher.YoutubeWrapper.csproj" />
+        <ProjectReference Include="..\MovieSearcher.Core\MovieSearcher.Core.csproj"/>
+        <ProjectReference Include="..\MovieSearcher.Services\MovieSearcher.Services.csproj"/>
+        <ProjectReference Include="..\MovieSearcher.YoutubeWrapper\MovieSearcher.YoutubeWrapper.csproj"/>
     </ItemGroup>
 
 </Project>

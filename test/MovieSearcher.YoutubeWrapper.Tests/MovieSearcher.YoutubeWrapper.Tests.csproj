@@ -25,7 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\MovieSearcher.YoutubeWrapper\MovieSearcher.YoutubeWrapper.csproj" />
+        <ProjectReference Include="..\..\src\MovieSearcher.YoutubeWrapper\MovieSearcher.YoutubeWrapper.csproj"/>
     </ItemGroup>
 
 </Project>

@@ -18,6 +18,14 @@ public abstract class BaseHandler : IHandler
 
         return request;
     }
+    
+    public virtual async Task<object?> Handle(CancellationToken cancellationToken, object request, params object[] parameters)
+    {
+        if (_nextHandler != null)
+            return await _nextHandler.Handle(cancellationToken, request, parameters);
+
+        return (request, parameters);
+    }
 }
 
 // public abstract class BaseHandler : IHandler

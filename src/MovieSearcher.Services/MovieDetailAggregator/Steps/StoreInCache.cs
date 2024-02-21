@@ -9,15 +9,6 @@ using VimeoDotNet.Models;
 
 namespace MovieSearcher.Services.MovieDetailAggregator.Steps;
 
-// public class PrepareCacheData(ILogger<StoreInCache> logger) : BaseHandler
-// {
-//     public override Task<object?> Handle(object request, CancellationToken cancellationToken)
-//     {
-//         
-//         return base.Handle(request, cancellationToken);
-//     }
-// }
-
 public class StoreInCache(ILogger<StoreInCache> logger, IDistributedCache distributedCache) : BaseHandler
 {
     /// <summary>

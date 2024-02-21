@@ -38,9 +38,9 @@ public class MovieDetailAggregator(
     {
         try
         {
-            var result = await SearchHandler.Handle(queryParameters, cancellationToken);
+            var result = (ValueTuple<object, object[]>)(await SearchHandler.Handle(queryParameters, cancellationToken) ?? throw new InvalidOperationException("Unexpected service result!"));
             
-            return (VideoResponse<List<VideoData<Video, List<string>>>, int, int, int>)(result ?? throw new InvalidOperationException());
+            return (VideoResponse<List<VideoData<Video, List<string>>>, int, int, int>)(result.Item2[0] ?? throw new InvalidOperationException("Unexpected service result!"));
         }
         catch (MovieAggregatorException movieAggregatorException)
         {

@@ -19,10 +19,10 @@ public class SearchViaCache(ILogger<SearchViaCache> logger, IDistributedCache di
 
         var key = queryParameters!.GenerateKey();
 
-        logger.LogInformation($"Redis cache key generated. Key:{key}");
+        logger.LogInformation("Redis cache key: {key}", key);
 
         var videoResponse = await TryGetCachedResponseAsync(key, cancellationToken);
-        
+
         if (videoResponse == null)
             return await base.Handle(request, cancellationToken);
 

@@ -7,7 +7,7 @@ using MovieSearcher.Core.Patterns.CoR;
 using MovieSearcher.Core.Query;
 using VimeoDotNet.Models;
 
-namespace MovieSearcher.Services.MovieDetailAggregator.Steps;
+namespace MovieSearcher.Services.MovieDetailAggregator.V2.Steps;
 
 public class SearchViaCache(ILogger<SearchViaCache> logger, IDistributedCache distributedCache) : BaseHandler
 {

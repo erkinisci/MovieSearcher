@@ -3,7 +3,7 @@ using System.Text;
 using Microsoft.Extensions.Caching.Distributed;
 using MovieSearcher.Core.Extensions;
 using MovieSearcher.Core.Query;
-using MovieSearcher.Services.OLD_Aggregator;
+using MovieSearcher.Services.MovieDetailAggregator.V1;
 using StackExchange.Redis;
 
 namespace MovieSearcher.Services.Tests;

@@ -6,7 +6,7 @@ using MovieSearcher.Core.Query;
 using MovieSearcher.VimeoWrapper.Services;
 using VimeoDotNet.Models;
 
-namespace MovieSearcher.Services.MovieDetailAggregator.Steps;
+namespace MovieSearcher.Services.MovieDetailAggregator.V2.Steps;
 
 public class AggregatorVideoServiceCall(ILogger<AggregatorVideoServiceCall> logger, IVimeoService vimeoService)
     : BaseHandler

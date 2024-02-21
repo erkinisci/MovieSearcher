@@ -3,7 +3,7 @@ using MovieSearcher.Core.Exceptions;
 using MovieSearcher.Core.Patterns.CoR;
 using MovieSearcher.Core.Query;
 
-namespace MovieSearcher.Services.MovieDetailAggregator.Steps;
+namespace MovieSearcher.Services.MovieDetailAggregator.V2.Steps;
 
 public class AggregatorQueryParameterChecks(ILogger<AggregatorQueryParameterChecks> logger) : BaseHandler
 {

@@ -5,8 +5,9 @@ using MovieSearcher.Core.Patterns.CoR;
 using MovieSearcher.Core.Utility;
 using MovieSearcher.Services;
 using MovieSearcher.Services.MovieDetailAggregator;
-using MovieSearcher.Services.MovieDetailAggregator.Steps;
-using MovieSearcher.Services.OLD_Aggregator;
+using MovieSearcher.Services.MovieDetailAggregator.V1;
+using MovieSearcher.Services.MovieDetailAggregator.V2;
+using MovieSearcher.Services.MovieDetailAggregator.V2.Steps;
 using MovieSearcher.VimeoWrapper.Options;
 using MovieSearcher.VimeoWrapper.Services;
 using MovieSearcher.YoutubeWrapper.Options;
@@ -100,12 +101,14 @@ builder.Services.AddSingleton<IVimeoClient>(provider =>
                 provider.GetRequiredService<MovieDetailAggregatorService>(),
                 provider.GetRequiredService<IDistributedCache>()
             ));
-        
-        builder.Services.AddKeyedTransient<IMovieDetailAggregatorService, MovieDetailAggregator>("MovieDetailAggregatorCOR");
-        builder.Services.AddKeyedScoped<IHandler, AggregatorQueryParameterChecks>("AggregatorQueryParameterChecks");
-        builder.Services.AddKeyedScoped<IHandler, AggregatorVideoServiceCall>("AggregatorVideoServiceCall");
-        builder.Services.AddKeyedScoped<IHandler, AggregatorVideoYoutubeCall>("AggregatorVideoYoutubeCall");
 
-        builder.Services.AddKeyedScoped<IHandler, SearchViaCache>("SearchViaCache");
+        builder.Services.AddKeyedScoped<IMovieDetailAggregatorService, CachedMovieDetailAggregator>(nameof(CachedMovieDetailAggregator));
+        
+        builder.Services.AddKeyedScoped<IHandler, AggregatorQueryParameterChecks>(nameof(AggregatorQueryParameterChecks));
+        builder.Services.AddKeyedScoped<IHandler, AggregatorVideoServiceCall>(nameof(AggregatorVideoServiceCall));
+        builder.Services.AddKeyedScoped<IHandler, AggregatorVideoYoutubeCall>(nameof(AggregatorVideoYoutubeCall));
+
+        builder.Services.AddKeyedScoped<IHandler, SearchViaCache>(nameof(SearchViaCache));
+        builder.Services.AddKeyedScoped<IHandler, StoreInCache>(nameof(StoreInCache));
     }
 }

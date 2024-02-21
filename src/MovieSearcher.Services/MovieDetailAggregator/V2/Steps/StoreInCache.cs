@@ -2,12 +2,11 @@
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
-using MovieSearcher.Core.Models;
+using MovieSearcher.Core.Extensions;
 using MovieSearcher.Core.Patterns.CoR;
 using MovieSearcher.Core.Query;
-using VimeoDotNet.Models;
 
-namespace MovieSearcher.Services.MovieDetailAggregator.Steps;
+namespace MovieSearcher.Services.MovieDetailAggregator.V2.Steps;
 
 public class StoreInCache(ILogger<StoreInCache> logger, IDistributedCache distributedCache) : BaseHandler
 {
@@ -28,13 +27,19 @@ public class StoreInCache(ILogger<StoreInCache> logger, IDistributedCache distri
         WriteIndented = true
     };
 
-    // TODO: handle here!!! will written a new handler in between for gluing key - response for save Handler
-    public override async Task<object?> Handle(object request, CancellationToken cancellationToken)
+    public override async Task<object?> Handle(CancellationToken cancellationToken, object request,
+        params object[] parameters)
     {
+        var key = (request as QueryParameters)!.GenerateKey();
+        
+        logger.LogInformation("Data storing into cache with key: {key}", key);
+        
         var data = JsonSerializer.Serialize(request, JsonOptions);
 
-        await distributedCache.SetStringAsync("key", data, CacheOptions, cancellationToken);
+        await distributedCache.SetStringAsync(key, data, CacheOptions, cancellationToken);
 
-        return base.Handle(request, cancellationToken);
+        logger.LogInformation("Data stored in cache with key: {key}", key);
+
+        return await base.Handle(cancellationToken, request, parameters);
     }
 }

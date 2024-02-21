@@ -7,7 +7,7 @@ using MovieSearcher.Core.Models;
 using MovieSearcher.Core.Query;
 using VimeoDotNet.Models;
 
-namespace MovieSearcher.Services.OLD_Aggregator;
+namespace MovieSearcher.Services.MovieDetailAggregator.V1;
 
 public class CachedMovieDetailAggregatorService : IMovieDetailAggregatorService
 {

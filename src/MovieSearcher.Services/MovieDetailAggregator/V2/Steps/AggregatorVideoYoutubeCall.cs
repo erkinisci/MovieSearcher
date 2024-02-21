@@ -5,7 +5,7 @@ using MovieSearcher.Core.Models;
 using MovieSearcher.Core.Patterns.CoR;
 using VimeoDotNet.Models;
 
-namespace MovieSearcher.Services.MovieDetailAggregator.Steps;
+namespace MovieSearcher.Services.MovieDetailAggregator.V2.Steps;
 
 public class AggregatorVideoYoutubeCall(
     ILogger<AggregatorVideoYoutubeCall> logger,
@@ -14,8 +14,6 @@ public class AggregatorVideoYoutubeCall(
 {
     public override async Task<object?> Handle(CancellationToken cancellationToken, object request, params object[] parameters)
     {
-        logger.LogInformation("Request object type '{request.GetType()}'", request.GetType());
-
         if(parameters == null || parameters.Length == 0)
             throw new MovieAggregatorException("There is no video result!");
         

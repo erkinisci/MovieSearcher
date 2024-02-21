@@ -5,7 +5,7 @@ using MovieSearcher.Core.Query;
 using MovieSearcher.VimeoWrapper.Services;
 using VimeoDotNet.Models;
 
-namespace MovieSearcher.Services.OLD_Aggregator;
+namespace MovieSearcher.Services.MovieDetailAggregator.V1;
 
 public class MovieDetailAggregatorService(
     ILogger<MovieDetailAggregatorService> logger,

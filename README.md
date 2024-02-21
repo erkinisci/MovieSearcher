@@ -17,6 +17,20 @@ The Movie Search API is a C# web application that seamlessly connects to the Vim
 
 ## Getting Started
 
+## API Overview
+
+The API I have developed incorporates the use of the Asp.Versioning NuGet package for version control and implementation.
+
+### Asp.Net Versioning
+
+I have organized the implementations into two versions: V1 and V2.
+
+**V1:** Version 1 includes a straightforward implementation of a video aggregator.
+
+**V2:** Version 2, on the other hand, utilizes the Chain of Responsibility pattern for both data aggregation and caching mechanisms, enhancing the overall functionality.
+
+Feel free to explore each version based on your specific requirements and preferences.
+
 ## Directory Structure
 
 ```bash
@@ -120,7 +134,7 @@ https://learn.microsoft.com/en-us/azure/azure-app-configuration/
 
 ```json
 "ConnectionStrings": {
-"RedisConnectionString": ""
+    "RedisConnectionString": ""
 }
 ```
 
@@ -138,27 +152,29 @@ dotnet run
 * Retrieves comprehensive details from the API in a paginated manner.
 
 ```bash
-GET http://localhost:${Port}/api/movies?search=yourSearchTerm
+GET http://localhost:${Port}/api/v{version:apiVersion}/movies?query=yourSearchTerm
 ```
 
 * Fetches comprehensive details from the API for a specified page.
 
 ```bash
-GET http://localhost:${Port}/api/movies?search=yourSearchTerm&page=1
+GET http://localhost:${Port}/api/v{version:apiVersion}/movies?query=yourSearchTerm&page=1
 ```
 
 * Retrieves comprehensive details from the API for a specified page, including information about a specified number of videos.
 ```bash
 For instance, issuing this request yields details for 100 videos on Page 1.
 
-GET http://localhost:5000/api/movies?search=yourSearchTerm&page=1&perPage=100
+GET http://localhost:5000/api/v{version:apiVersion}/movies?query=yourSearchTerm&page=1&perPage=100
 ```
 
 #### 2. Review the Results
 
 * The API will internally connect to Vimeo and YouTube, fetch relevant data, and aggregate the results.
 
-* The response will be stored in cache database. (2 Hours; default)
+* **Backend Service Caching** The response will be stored in cache database. (2 Hours; default)
+
+* **Asp.Net OutputCache** - The response will be stored in cache database. (15 seconds; default)
 
 ```json
 {
@@ -190,7 +206,7 @@ GET http://localhost:5000/api/movies?search=yourSearchTerm&page=1&perPage=100
 
 ```json
 "ConnectionStrings": {
-"RedisConnectionString": "your-redis-redis:6379"
+    "RedisConnectionString": "your-redis-redis:6379"
 }
 ```
 
@@ -232,7 +248,7 @@ Vimeo imposes a maximum limit of 100 movies per query, with a default of 25 in t
 #### Get all shows, returns paged data
 
 ```http
-  GET /api/movies?search=${yourSearchTerm}
+  GET /api/v{version:apiVersion}/movies?search=${yourSearchTerm}
 ```
 
 | Parameter | Type     | Description                |
@@ -242,7 +258,7 @@ Vimeo imposes a maximum limit of 100 movies per query, with a default of 25 in t
 #### Get count of videos based on specified pageNumber
 
 ```http
-  GET /api/movies?search=${yourSearchTerm}&page=${pageNumber}
+  GET /api/v{version:apiVersion}/movies?search=${yourSearchTerm}&page=${pageNumber}
 ```
 
 | Parameter | Type     | Description                       |
@@ -253,7 +269,7 @@ Vimeo imposes a maximum limit of 100 movies per query, with a default of 25 in t
 #### Get count of videos based on specified videoCount
 
 ```http
-  GET /api/movies?search=${yourSearchTerm}&page=${pageNumber}&perPage=${videoCount}
+  GET /api/v{version:apiVersion}/movies?search=${yourSearchTerm}&page=${pageNumber}&perPage=${videoCount}
 ```
 
 | Parameter | Type     | Description                       |

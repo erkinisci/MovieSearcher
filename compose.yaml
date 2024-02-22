@@ -1,26 +1,26 @@
 version: '3.8'
 
 services:
-  moviesearcher-api:
-    container_name: 'moviesearcher-api'
+  movie-searcher-api:
+    container_name: 'movie-searcher-api'
     restart: always
     build:
       context: .
       target: development
     ports:
-        8080:80
+      - "8080:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - REDIS_HOST=moviesearcher-redis
+      - REDIS_HOST=movie-searcher-redis
       - REDIS_PORT=6380
     depends_on:
-      - moviesearcher-redis
+      - movie-searcher-redis
     networks:
-      - moviesearcher_backend_services
+      - movie-searcher_backend_services
 
-  moviesearcher-redis:
-    container_name: 'moviesearcher-redis'
+  movie-searcher-redis:
+    container_name: 'movie-searcher-redis'
     restart: always
     image: "redis:latest"
     ports:
@@ -28,10 +28,10 @@ services:
     volumes:
       - redis_data:/data
     networks:
-      - moviesearcher_backend_services
+      - movie-searcher_backend_services
 
 networks:
-  moviesearcher_backend_services:
+  movie-searcher_backend_services:
     driver: bridge
     
 volumes:

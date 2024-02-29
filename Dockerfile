@@ -1,34 +1,24 @@
 # Development stage
-FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS development
+FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
 
-COPY . /source
+WORKDIR /src
 
-WORKDIR /source/src/MovieSearcher.WebAPI
+COPY ["src/MovieSearcher.Core/MovieSearcher.Core.csproj", "MovieSearcher.Core/"]
+COPY ["src/MovieSearcher.Services/MovieSearcher.Services.csproj", "MovieSearcher.Services/"]
+COPY ["src/MovieSearcher.VimeoWrapper/MovieSearcher.VimeoWrapper.csproj", "MovieSearcher.VimeoWrapper/"]
+COPY ["src/MovieSearcher.YoutubeWrapper/MovieSearcher.YoutubeWrapper.csproj", "MovieSearcher.YoutubeWrapper/"]
+COPY ["src/MovieSearcher.WebAPI/MovieSearcher.WebAPI.csproj", "MovieSearcher.WebAPI/"]
 
-# Set the ASPNETCORE_ENVIRONMENT explicitly for dotnet watch
-ENV ASPNETCORE_ENVIRONMENT=Development
+RUN dotnet restore "MovieSearcher.WebAPI/MovieSearcher.WebAPI.csproj"
 
-# Use "dotnet watch run" for development
-CMD dotnet watch run --no-launch-profile
+COPY . .
 
-# Final stage
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS final
+RUN dotnet publish -c Release -o /app "src/MovieSearcher.WebAPI/MovieSearcher.WebAPI.csproj"
 
+# Publish stage
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS publish
 WORKDIR /app
 
-COPY --from=build /app .
-
-ARG UID=10001
-
-RUN adduser \
-    --disabled-password \
-    --gecos "" \
-    --home "/nonexistent" \
-    --shell "/sbin/nologin" \
-    --no-create-home \
-    --uid "${UID}" \
-    appuser
-
-USER appuser
+COPY --from=build /app ./
 
 ENTRYPOINT ["dotnet", "MovieSearcher.WebAPI.dll"]
